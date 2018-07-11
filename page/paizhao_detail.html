@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="../style/paizhao.css">
+<title>渠道详情-渠道拍照</title>
+</head>
+<body id="bd_paizhao_detail">
+<div id="wrapper">
+	<header id="header" class="dark">
+    	<a class="btn back" href="javascript:history.back();"><i></i><em>返回</em></a>
+		<h1>渠道详情</h1>
+	</header>
+    <div id="main" class="paizhao_detail">
+    	<ul class="list">
+        	<li>
+            	<label>所属区县</label>
+            	<em>彭泽县</em>
+            </li>
+        	<li>
+            	<label>渠道代码</label>
+            	<em>7922405</em>
+            </li>
+			<li>
+            	<label>渠道名称</label>
+            	<em>彭泽县城区麦点手机城</em>
+            </li>
+            <li>
+            	<label>装修计划单</label>
+            	<em>3423413123123</em>
+            </li>
+            <li>
+            	<label>申请日期</label>
+            	<em>2018-05-12 12:12</em>
+            </li>
+        </ul>
+        <div class="com-box">
+        	<header><h3><em>渠道相册</em></h3></header>
+            <div class="body">
+                <div class="album_show">
+                    <div><img src="../image/img_720x540.jpg"></div>
+                    <div><img src="../image/img_720x540.jpg"></div>
+                </div>
+                <div class="msg dis_0"><em>还未上传图片！</em></div>
+            </div>
+        </div> 
+    </div>
+    <div class="action-bar upload">
+		<div class="file-upload">
+			<div class="file-box action">
+				<input type="file" id="upload-file" accept="image/png,image/jpg,image/jpeg" multiple onchange="addFiles(this);">
+				<a class="btn-upload"><em>选择图片</em></a>
+			</div>
+		</div>
+		
+		<button type="button" class="btn dark"><em>确认上传</em></button>
+	</div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/slick/slick.min.js"></script>
+<script>
+//相册
+$(".album_show").slick({
+	slidesToShow:1,
+	infinite:false,
+	mobileFirst:true,
+	speed:300,
+	dots:true,
+	swipeToSlide:true
+});	
+
+//上传图片预览
+var fileArr = [];
+function addFiles(_this) {
+    var fileList = _this.files;  
+    var len = fileList.length;
+    for(var i=0;i<len;i++){
+		//限制最多只能上传5张图片
+		if(fileList.length>5||fileArr.length>4){
+			showTip("最多只能上传5张图片！","toast");
+			return false;
+		}
+        fileArr.push(fileList[i]);
+        var objUrl = getObjectURL(fileList[i]);
+        if (objUrl) {
+            var imgHtml = '<img src="' + objUrl + '">';
+           	$('.file-box.action').before('<div class="file-box">'+imgHtml+'<a class="btn-del">删除</a></div>');     
+		   	
+        }
+	};
+}
+$(".file-upload").on("click",".btn-del",function(){
+	fileArr.splice($(this).parent().index(),1);
+	$(this).parent().remove();
+	$("#upload-file").attr('type','text');
+    $("#upload-file").attr('type','file');
+});
+function getObjectURL(file) {
+    var url = null;
+    if (window.createObjectURL != undefined) {
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) {
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) {
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+
+function showTip(tip,position,el,time){
+	if(!el){el=$("body");}
+	if(!time){time=1600;}
+	el.children(".com-tip").remove();
+	el.append("<div class='com-tip "+position+"'>"+tip+"</div>");
+	if(position=="toast"){
+		el.children(".com-tip").fadeIn(600)
+	}else{
+		el.children(".com-tip").slideDown(300);
+	}
+	var tipTimer;
+	clearTimeout(tipTimer);
+	tipTimer=setTimeout(function(){
+		if(position=="toast"){
+			el.children(".com-tip").fadeOut(600)
+		}else{
+			el.children(".com-tip").slideUp(300);
+		}
+	},time);
+}
+</script>
+</body>
+</html>
